@@ -57,8 +57,11 @@ class FirebasePlayerRepository implements PlayerRepository {
                 anonymousPlayer.getPort(),
                 UUID.randomUUID().toString()
         );
-        playersCollection.add(serialize(registeredPlayer)).resultNow();
-        return registeredPlayer;
+        try {
+            playersCollection.add(serialize(registeredPlayer)).get();
+            return registeredPlayer;
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
     }
-
 }

@@ -2,5 +2,6 @@
 build/
 !gradle/wrapper/gradle-wrapper.jar
 *.log
+*.gz
 src/resources/public
 credentials.json

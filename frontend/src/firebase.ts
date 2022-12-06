@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import { connectFirestoreEmulator, getFirestore } from "firebase/firestore";
 
 const firebase = initializeApp({
     apiKey: "AIzaSyA0tgztbEzTBlUjNXiTcs82S0q87Odbo4M",
@@ -11,3 +11,7 @@ const firebase = initializeApp({
 });
 
 export const firestore = getFirestore(firebase);
+
+if (location.hostname === "localhost") {
+    connectFirestoreEmulator(firestore, 'localhost', 9090);
+}

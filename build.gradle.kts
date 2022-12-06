@@ -37,11 +37,12 @@ repositories {
 dependencies {
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
-    errorprone("com.google.errorprone:error_prone_core:latest.release")
+    errorprone("com.google.errorprone:error_prone_core:2.16")
     implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("com.google.firebase:firebase-admin:9.1.0")
+    implementation("com.google.firebase:firebase-admin:9.1.1")
     implementation("com.github.slugify:slugify:3.0.2")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    implementation(fileTree(baseDir = "libs"))
 }
 
 tasks.withType<Test> {

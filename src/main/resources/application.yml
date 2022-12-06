@@ -1,7 +1,6 @@
 app:
   firebase:
-    key-location: './src/main/resources/credentials.json'
-    env: 'local'
+    enabled: false
 
 logging:
   file:
