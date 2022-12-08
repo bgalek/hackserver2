@@ -1,38 +1,47 @@
-import { useCollection } from "react-firebase-hooks/firestore";
 import { collection, query } from "firebase/firestore";
-import { firestore } from "../firebase";
-import { Alert, Loader } from "@mantine/core";
+import { firestore, publishedChallengeConverter } from "../firebase";
+import { Alert } from "@mantine/core";
 import { IconAlertCircle } from "@tabler/icons";
 import React from "react";
+import Loading from "./Loading";
+import { useFirestoreQuery } from "@react-query-firebase/firestore";
+import { PublishedChallenge } from "../types/PublishedChallenge";
 
 export default function Challenges() {
-    const [snapshot, loading, error] = useCollection(
-        query(collection(firestore, "challenges"))
+    const ref = query(collection(firestore, "challenges")).withConverter(
+        publishedChallengeConverter
     );
+    const {
+        data: challenges,
+        isLoading,
+        isError,
+        error,
+    } = useFirestoreQuery<PublishedChallenge>(["challenges"], ref, {
+        subscribe: true,
+    });
 
-    if (loading) return <Loader />;
-    if (error) {
+    if (isLoading) return <Loading />;
+    if (isError || !challenges) {
         return (
             <Alert
                 icon={<IconAlertCircle size={16} />}
                 title="Bummer!"
                 color="red"
             >
-                {error.message}
+                {error ? error.message : "internal error"}
             </Alert>
         );
     }
 
-    const rows = snapshot?.docs.map((snapshot) => {
-        const data = snapshot.data();
-        return (
-            <tr key={snapshot.id}>
-                <td>{data.name}</td>
-                <td>{data.host}</td>
-                <td>{data.port}</td>
-            </tr>
-        );
-    });
+    const rows = challenges.docs
+        .map((it) => it.data())
+        .map((challenge) => {
+            return (
+                <tr key={challenge.id}>
+                    <td>{challenge.name}</td>
+                </tr>
+            );
+        });
 
     return (
         <div>

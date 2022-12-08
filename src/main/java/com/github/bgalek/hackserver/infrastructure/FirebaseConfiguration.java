@@ -41,7 +41,7 @@ class FirebaseConfiguration {
         }).start();
         return FirestoreOptions.newBuilder()
                 .setCredentials(GoogleCredentials.newBuilder().build())
-                .setProjectId("local")
+                .setProjectId("hackserver-9c717")
                 .setEmulatorHost("localhost:%s".formatted(emulatorPort))
                 .build()
                 .getService();

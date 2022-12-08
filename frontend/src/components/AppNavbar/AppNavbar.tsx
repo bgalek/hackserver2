@@ -1,24 +1,46 @@
 import React, { useState } from "react";
 import { Code, Group, Navbar, Title } from "@mantine/core";
-import { IconDatabaseImport, IconDeviceGamepad2, IconLogout, IconReceipt2, IconUser, } from "@tabler/icons";
-import { useRouter } from "@tanstack/react-router";
+import {
+    IconDatabaseImport,
+    IconDeviceGamepad2,
+    IconLogout,
+    IconReceipt2,
+    IconUser,
+} from "@tabler/icons";
 import { useLocalUserSettings } from "@bgalek/react-contexts";
 import { useAppBarStyles } from "./AppNavbar.styles";
-
-const data = [
-    { link: "/", label: "My profile", icon: IconUser },
-    { link: "/players", label: "Players", icon: IconUser },
-    { link: "/challenges", label: "Challanges", icon: IconDatabaseImport },
-    { link: "/about", label: "About", icon: IconReceipt2 },
-];
+import { useNavigate } from "react-router-dom";
+import { AppSettings } from "../../types/AppSettings";
 
 export function AppNavbar() {
     const { classes, cx } = useAppBarStyles();
     const [active, setActive] = useState("My profile");
-    const { clearSettings } = useLocalUserSettings();
-    const router = useRouter();
+    const { settings, clearSettings } = useLocalUserSettings<AppSettings>();
+    const navigate = useNavigate();
 
-    const links = data.map((item) => (
+    const menuItems = [];
+
+    if (settings.player.id) {
+        menuItems.push({
+            link: `/player`,
+            label: "My profile",
+            icon: IconUser,
+        });
+    } else {
+        menuItems.push({
+            link: "/players/sign-up",
+            label: "Register",
+            icon: IconUser,
+        });
+    }
+
+    menuItems.push(
+        { link: "/players", label: "Players", icon: IconUser },
+        { link: "/challenges", label: "Challanges", icon: IconDatabaseImport },
+        { link: "/about", label: "About", icon: IconReceipt2 }
+    );
+
+    const links = menuItems.map((item) => (
         <a
             className={cx(classes.link, {
                 [classes.linkActive]: item.label === active,
@@ -28,18 +50,10 @@ export function AppNavbar() {
             onClick={(event) => {
                 event.preventDefault();
                 setActive(item.label);
-                router.navigate({
-                    to: item.link,
-                    search: function (): never {
-                        return undefined as never;
-                    },
-                    params: function (): never {
-                        return undefined as never;
-                    },
-                });
+                navigate(item.link);
             }}
         >
-            <item.icon className={classes.linkIcon} stroke={1.5}/>
+            <item.icon className={classes.linkIcon} stroke={1.5} />
             <span>{item.label}</span>
         </a>
     ));
@@ -49,7 +63,7 @@ export function AppNavbar() {
             <Navbar.Section grow>
                 <Group className={classes.header} position="apart">
                     <Group>
-                        <IconDeviceGamepad2/>
+                        <IconDeviceGamepad2 />
                         <Title className={classes.logo}>HACKSERVER</Title>
                     </Group>
                     <Code className={classes.version}>
@@ -60,15 +74,34 @@ export function AppNavbar() {
             </Navbar.Section>
 
             <Navbar.Section className={classes.footer}>
-                <a
-                    href="#"
-                    className={classes.link}
-                    onClick={() => clearSettings()}
-                >
-                    <IconLogout className={classes.linkIcon} stroke={1.5}/>
-                    <span>Logout</span>
-                </a>
+                {settings.player && (
+                    <LogoutButton
+                        classes={{
+                            link: classes.link,
+                            linkIcon: classes.linkIcon,
+                        }}
+                        onClick={() => {
+                            clearSettings();
+                            navigate("/");
+                        }}
+                    />
+                )}
             </Navbar.Section>
         </Navbar>
+    );
+}
+
+function LogoutButton({
+    classes,
+    onClick,
+}: {
+    classes: { link: string; linkIcon: string };
+    onClick: () => void;
+}) {
+    return (
+        <a href="#" className={classes.link} onClick={onClick}>
+            <IconLogout className={classes.linkIcon} stroke={1.5} />
+            <span>Logout</span>
+        </a>
     );
 }

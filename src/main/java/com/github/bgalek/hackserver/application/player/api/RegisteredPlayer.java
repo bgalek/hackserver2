@@ -1,20 +1,36 @@
 package com.github.bgalek.hackserver.application.player.api;
 
-public non-sealed class RegisteredPlayer extends AnonymousPlayer {
-    private final String id;
-    private final String secret;
+import java.net.InetSocketAddress;
+import java.net.URI;
 
-    public RegisteredPlayer(String id, String name, String host, Long port, String secret) {
-        super(name, host, port);
+public non-sealed class RegisteredPlayer extends AnonymousPlayer {
+    private final PlayerId id;
+    private final String secret;
+    private HealthStatus healthStatus = HealthStatus.UNKNOWN;
+
+    public RegisteredPlayer(PlayerId id, String name, InetSocketAddress inetSocketAddress, String secret) {
+        super(name, inetSocketAddress);
         this.id = id;
         this.secret = secret;
     }
 
-    public String getId() {
+    public PlayerId getId() {
         return id;
     }
 
     public String getSecret() {
         return secret;
+    }
+
+    public URI getHealthEndpoint() {
+        return URI.create("http://%s:%d/status/health".formatted(getInetSocketAddress().getHostString(), getInetSocketAddress().getPort()));
+    }
+
+    public HealthStatus getHealthStatus() {
+        return healthStatus;
+    }
+
+    public void setHealthStatus(HealthStatus healthStatus) {
+        this.healthStatus = healthStatus;
     }
 }

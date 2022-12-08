@@ -1,6 +1,8 @@
 package com.github.bgalek.hackserver.application.player;
 
 import com.github.bgalek.hackserver.application.player.api.AnonymousPlayer;
+import com.github.bgalek.hackserver.application.player.api.HealthStatus;
+import com.github.bgalek.hackserver.application.player.api.PlayerId;
 import com.github.bgalek.hackserver.application.player.api.RegisteredPlayer;
 import com.google.cloud.firestore.CollectionReference;
 import com.google.cloud.firestore.DocumentSnapshot;
@@ -50,16 +52,25 @@ class FirebasePlayerRepository implements PlayerRepository {
     @Override
     public RegisteredPlayer savePlayer(AnonymousPlayer anonymousPlayer) {
         String id = playersCollection.document().getId();
+        String secret = UUID.randomUUID().toString();
         RegisteredPlayer registeredPlayer = new RegisteredPlayer(
-                id,
+                PlayerId.valueOf(id),
                 anonymousPlayer.getName(),
-                anonymousPlayer.getHost(),
-                anonymousPlayer.getPort(),
-                UUID.randomUUID().toString()
+                anonymousPlayer.getInetSocketAddress(),
+                secret
         );
         try {
-            playersCollection.add(serialize(registeredPlayer)).get();
+            playersCollection.document(id).create(serialize(registeredPlayer)).get();
             return registeredPlayer;
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void updateHealth(PlayerId playerId, HealthStatus healthStatus) {
+        try {
+            playersCollection.document(playerId.value()).update("status", healthStatus.name()).get();
         } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
         }

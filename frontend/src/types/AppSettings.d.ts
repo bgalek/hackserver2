@@ -1,6 +1,4 @@
-import { RegisteredPlayer } from "./RegisteredPlayer";
-
 export interface AppSettings {
-    loading: boolean;
-    player?: RegisteredPlayer;
+    player: { id: id; secret: string };
+    admin?: { secret: string }
 }

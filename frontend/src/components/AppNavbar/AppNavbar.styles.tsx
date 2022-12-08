@@ -16,6 +16,13 @@ export const useAppBarStyles = createStyles((theme, _params, getRef) => {
             boxShadow: theme.shadows.sm,
         },
 
+        adminLink: {
+            backgroundColor: theme.fn.lighten(primaryColor, 0.1),
+            color: theme.white,
+            fontWeight: 700,
+            textDecoration: "none",
+        },
+
         version: {
             backgroundColor: theme.fn.lighten(primaryColor, 0.1),
             color: theme.white,

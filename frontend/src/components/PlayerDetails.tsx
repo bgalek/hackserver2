@@ -1,6 +1,7 @@
 import {
     Avatar,
     Badge,
+    Center,
     Container,
     Paper,
     Table,
@@ -8,38 +9,30 @@ import {
     Title,
 } from "@mantine/core";
 import React from "react";
-import { Registration } from "./Registration";
-import { useLocalUserSettings } from "@bgalek/react-contexts";
-import { AppSettings } from "../../types/AppSettings";
+import { RegisteredPlayer } from "../types/RegisteredPlayer";
+import { HealthIndicator } from "./HealthIndicator";
 
-export function MyProfile() {
-    const { settings, setSettings } = useLocalUserSettings<AppSettings>();
-
-    if (!settings.player) {
-        return (
-            <Registration
-                onRegistration={(player) => setSettings("player", player)}
-            />
-        );
-    }
-
+export function PlayerDetails({ player }: { player: RegisteredPlayer }) {
     return (
         <Container size="lg" my={40}>
             <Avatar
-                src={`https://avatars.dicebear.com/api/male/${settings.player.id}.svg`}
+                src={`https://avatars.dicebear.com/api/male/${player.id}.svg`}
                 size={120}
                 radius={120}
                 mx="auto"
             />
             <Text align="center" size="lg" weight={500} mt="md">
-                {settings.player.name}
+                {player.name}
             </Text>
             <Text align="center" color="dimmed" size="sm">
-                http://{settings.player.host}:{settings.player.port}
+                http://{player.host}:{player.port}
             </Text>
             <Text align="center" color="dimmed">
-                secret:<Badge color="red">{settings.player.secret}</Badge>
+                secret:<Badge color="red">{player.secret}</Badge>
             </Text>
+            <Center>
+                <HealthIndicator status={player.status} />
+            </Center>
             <Title mt={30}>Your progress</Title>
             <Paper withBorder shadow="sm" p={30} mt={30} radius="md">
                 <Table>

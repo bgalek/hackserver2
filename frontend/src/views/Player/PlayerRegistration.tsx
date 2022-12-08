@@ -1,9 +1,19 @@
-import { Button, Container, NumberInput, Paper, Text, TextInput, Title, } from "@mantine/core";
+import {
+    Button,
+    Container,
+    NumberInput,
+    Paper,
+    Text,
+    TextInput,
+    Title,
+} from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation } from "react-query";
 import React from "react";
-import { RegisteredPlayer } from "../../types/RegisteredPlayer";
 import { showNotification } from "@mantine/notifications";
+import { useLocalUserSettings } from "@bgalek/react-contexts";
+import { AppSettings } from "../../types/AppSettings";
+import { useNavigate } from "react-router-dom";
 
 interface FormValues {
     name: string;
@@ -11,9 +21,9 @@ interface FormValues {
     port: number;
 }
 
-type RegistrationProps = { onRegistration: (player: RegisteredPlayer) => void };
-
-export function Registration({ onRegistration }: RegistrationProps) {
+export function PlayerRegistration() {
+    const { setSettings } = useLocalUserSettings<AppSettings>();
+    const navigate = useNavigate();
     const registration = useMutation({
         mutationFn: (variables: FormValues) =>
             fetch("/api/players", {
@@ -23,12 +33,25 @@ export function Registration({ onRegistration }: RegistrationProps) {
                 method: "POST",
                 body: JSON.stringify(variables),
             })
+                .then((response) => {
+                    if (!response.ok) throw Error(response.statusText);
+                    return response;
+                })
                 .then((response) => response.json())
-                .catch((error) => showNotification({
-                    title: 'Error',
-                    color: 'red',
-                    message: error.message || "",
-                }))
+                .then((player) => {
+                    setSettings("player", {
+                        id: player.id,
+                        secret: player.secret,
+                    });
+                    navigate(`/player`);
+                })
+                .catch((error) =>
+                    showNotification({
+                        title: "Error",
+                        color: "red",
+                        message: error.message || "",
+                    })
+                ),
     });
     const form = useForm<FormValues>({
         initialValues: {
@@ -46,7 +69,7 @@ export function Registration({ onRegistration }: RegistrationProps) {
             <Paper
                 component="form"
                 onSubmit={form.onSubmit((values) => {
-                    registration.mutateAsync(values).then(onRegistration);
+                    registration.mutateAsync(values);
                 })}
                 withBorder
                 shadow="sm"
