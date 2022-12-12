@@ -1,6 +1,7 @@
 import {
     Avatar,
     Badge,
+    Button,
     Center,
     Container,
     Paper,
@@ -38,18 +39,54 @@ export function PlayerDetails({ player }: { player: RegisteredPlayer }) {
                 <Table>
                     <thead>
                         <tr>
-                            <th>Challange</th>
+                            <th>Challenge</th>
                             <th>Score</th>
                             <th>Result</th>
-                            <th>Anything</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>aaa</td>
+                            <td>Calculator</td>
                             <td>bbb</td>
                             <td>ccc</td>
-                            <td>ddd</td>
+                            <td><Button>RUN</Button></td>
+                        </tr>
+                        <tr>
+                            <td>Calculator</td>
+                            <td>bbb</td>
+                            <td>ccc</td>
+                            <td><Button>RUN</Button></td>
+                        </tr>
+                        <tr>
+                            <td>Calculator</td>
+                            <td>bbb</td>
+                            <td>ccc</td>
+                            <td><Button>RUN</Button></td>
+                        </tr>
+                        <tr>
+                            <td>Calculator</td>
+                            <td>bbb</td>
+                            <td>ccc</td>
+                            <td><Button>RUN</Button></td>
+                        </tr>
+                        <tr>
+                            <td>Calculator</td>
+                            <td>bbb</td>
+                            <td>ccc</td>
+                            <td><Button>RUN</Button></td>
+                        </tr>
+                        <tr>
+                            <td>Calculator</td>
+                            <td>bbb</td>
+                            <td>ccc</td>
+                            <td><Button>RUN</Button></td>
+                        </tr>
+                        <tr>
+                            <td>Calculator</td>
+                            <td>bbb</td>
+                            <td>ccc</td>
+                            <td><Button>RUN</Button></td>
                         </tr>
                     </tbody>
                 </Table>
@@ -59,18 +96,41 @@ export function PlayerDetails({ player }: { player: RegisteredPlayer }) {
                 <Table>
                     <thead>
                         <tr>
-                            <th>Challange</th>
+                            <th>Challenge</th>
+                            <th>Task</th>
+                            <th>Response</th>
+                            <th>Valid</th>
                             <th>Score</th>
-                            <th>Result</th>
-                            <th>Anything</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>aaa</td>
-                            <td>bbb</td>
-                            <td>ccc</td>
-                            <td>ddd</td>
+                            <td><a href="#">Calculator</a></td>
+                            <td>2+2</td>
+                            <td>4</td>
+                            <td>NO</td>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <td><a href="#">Calculator</a></td>
+                            <td>2+2</td>
+                            <td>4</td>
+                            <td>NO</td>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <td><a href="#">Calculator</a></td>
+                            <td>2+2</td>
+                            <td>4</td>
+                            <td>NO</td>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <td><a href="#">Calculator</a></td>
+                            <td>2+2</td>
+                            <td>4</td>
+                            <td>NO</td>
+                            <td>0</td>
                         </tr>
                     </tbody>
                 </Table>

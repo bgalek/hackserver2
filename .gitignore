@@ -5,3 +5,4 @@ build/
 *.gz
 src/resources/public
 credentials.json
+*.tmp

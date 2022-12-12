@@ -7,4 +7,4 @@ export interface RegisteredPlayer {
     status: HealthStatus;
 }
 
-export type HealthStatus = "UNKNOWN" | "HEALTHY" | "DEAD";
+export type HealthStatus = "HEALTHY" | "DEAD";

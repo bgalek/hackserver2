@@ -1,19 +1,11 @@
-import {
-    Button,
-    Container,
-    NumberInput,
-    Paper,
-    Text,
-    TextInput,
-    Title,
-} from "@mantine/core";
+import { Button, Container, NumberInput, Paper, Text, TextInput, Title, } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { useMutation } from "react-query";
 import React from "react";
-import { showNotification } from "@mantine/notifications";
+import { usePlayerRegistration } from "../../hooks/mutations";
 import { useLocalUserSettings } from "@bgalek/react-contexts";
 import { AppSettings } from "../../types/AppSettings";
 import { useNavigate } from "react-router-dom";
+import { routes } from "../../router";
 
 interface FormValues {
     name: string;
@@ -21,55 +13,33 @@ interface FormValues {
     port: number;
 }
 
+const initialValues = {
+    name: "",
+    host: "",
+    port: 8080,
+};
+
 export function PlayerRegistration() {
     const { setSettings } = useLocalUserSettings<AppSettings>();
     const navigate = useNavigate();
-    const registration = useMutation({
-        mutationFn: (variables: FormValues) =>
-            fetch("/api/players", {
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                method: "POST",
-                body: JSON.stringify(variables),
-            })
-                .then((response) => {
-                    if (!response.ok) throw Error(response.statusText);
-                    return response;
-                })
-                .then((response) => response.json())
-                .then((player) => {
-                    setSettings("player", {
-                        id: player.id,
-                        secret: player.secret,
-                    });
-                    navigate(`/player`);
-                })
-                .catch((error) =>
-                    showNotification({
-                        title: "Error",
-                        color: "red",
-                        message: error.message || "",
-                    })
-                ),
-    });
-    const form = useForm<FormValues>({
-        initialValues: {
-            name: "",
-            host: "",
-            port: 8080,
-        },
-    });
+    const playerRegistration = usePlayerRegistration();
+    const form = useForm<FormValues>({ initialValues, });
     return (
         <Container size="lg" my={40}>
-            <Title align="center">Welcome!</Title>
-            <Text color="dimmed" size="sm" align="center" mt={5}>
+            <Title>Welcome!</Title>
+            <Text color="dimmed" size="sm" mt={5}>
                 Please <Text component="span">register</Text> your workstation
             </Text>
             <Paper
                 component="form"
                 onSubmit={form.onSubmit((values) => {
-                    registration.mutateAsync(values);
+                    playerRegistration.mutateAsync(values).then((player) => {
+                        setSettings("player", {
+                            id: player.id,
+                            secret: player.secret,
+                        });
+                        navigate(routes.CURRENT_PLAYER);
+                    });
                 })}
                 withBorder
                 shadow="sm"

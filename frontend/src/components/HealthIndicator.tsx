@@ -1,32 +1,14 @@
 import React from "react";
 import { Badge, Box } from "@mantine/core";
-import { IconBug, IconCheck, IconSkull } from "@tabler/icons";
+import { IconBug, IconCheck } from "@tabler/icons";
 import { HealthStatus } from "../types/RegisteredPlayer";
-
-const skull = (
-    <Box sx={{ paddingTop: 4 }}>
-        <IconSkull size={16} />
-    </Box>
-);
-
-const check = (
-    <Box sx={{ paddingTop: 4 }}>
-        <IconCheck size={16} />
-    </Box>
-);
-
-const bug = (
-    <Box sx={{ paddingTop: 4 }}>
-        <IconBug size={16} />
-    </Box>
-);
 
 export function HealthIndicator({ status }: { status: HealthStatus }) {
     switch (status) {
         case "DEAD":
             return (
                 <Badge
-                    leftSection={skull}
+                    leftSection={<SkullIcon/>}
                     color="yellow"
                     variant="filled"
                     size="lg"
@@ -37,7 +19,7 @@ export function HealthIndicator({ status }: { status: HealthStatus }) {
         case "HEALTHY":
             return (
                 <Badge
-                    leftSection={check}
+                    leftSection={<CheckIcon/>}
                     color="green"
                     variant="filled"
                     size="lg"
@@ -45,11 +27,35 @@ export function HealthIndicator({ status }: { status: HealthStatus }) {
                     HEALTHY
                 </Badge>
             );
-        case "UNKNOWN":
+        default:
             return (
-                <Badge leftSection={bug} color="red" variant="filled" size="lg">
+                <Badge leftSection={<BugIcon/>} color="red" variant="filled" size="lg">
                     UNKNOWN
                 </Badge>
             );
     }
+}
+
+function SkullIcon() {
+    return (
+        <Box sx={{ paddingTop: 4 }}>
+            <IconBug size={16}/>
+        </Box>
+    );
+}
+
+function CheckIcon() {
+    return (
+        <Box sx={{ paddingTop: 4 }}>
+            <IconCheck size={16}/>
+        </Box>
+    );
+}
+
+function BugIcon() {
+    return (
+        <Box sx={{ paddingTop: 4 }}>
+            <IconBug size={16}/>
+        </Box>
+    );
 }

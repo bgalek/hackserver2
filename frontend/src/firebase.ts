@@ -22,7 +22,7 @@ const firebase = initializeApp({
 
 export const firestore = getFirestore(firebase);
 
-if (import.meta.env.DEV) {
+if (location.hostname === "localhost") {
     connectFirestoreEmulator(firestore, "localhost", 9090);
 }
 
@@ -60,6 +60,7 @@ export const publishedChallengeConverter: FirestoreDataConverter<PublishedChalle
             return {
                 id: snapshot.id,
                 name: data.name,
+                thumbnail: data.thumbnail
             };
         },
     };

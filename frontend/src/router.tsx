@@ -8,6 +8,7 @@ import Challenges from "./views/Challenges";
 import Players from "./views/Players";
 import { CurrentPlayerDetails } from "./views/Player/CurrentPlayerDetails";
 import { AdminLogin } from "./views/Admin/AdminLogin";
+import { CommandPalette } from "./components/CommandPalette";
 
 const styles = (theme: MantineTheme) => ({
     main: {
@@ -20,45 +21,68 @@ const styles = (theme: MantineTheme) => ({
 
 function Layout() {
     return (
-        <AppShell navbar={<AppNavbar />} styles={styles}>
-            <Outlet />
+        <AppShell navbar={<AppNavbar/>} styles={styles}>
+            <Outlet/>
+            <CommandPalette/>
         </AppShell>
     );
 }
 
+export const routes = {
+    CURRENT_PLAYER: "/me",
+    CHALLENGES_LIST: "/challenges",
+    ABOUT: "/about",
+    PLAYER_SIGN_UP: "/sign-up",
+    PLAYERS_LIST: "/players",
+    ADMIN: "/admin",
+    ADMIN_SIGN_UP: "/admin/sign-up",
+};
+
 export const router = createBrowserRouter([
     {
         path: "/",
-        element: <Layout />,
+        element: <Layout/>,
         children: [
             {
                 index: true,
                 element: <p>index</p>,
             },
             {
-                path: "/players",
-                element: <Players />,
+                path: routes.CURRENT_PLAYER,
+                element: <CurrentPlayerDetails/>,
+            },
+
+            {
+                path: routes.PLAYER_SIGN_UP,
+                element: <PlayerRegistration/>,
             },
             {
-                path: "/player",
-                element: <CurrentPlayerDetails />,
+                path: routes.PLAYERS_LIST,
+                children: [
+                    {
+                        path: "",
+                        index: true,
+                        element: <Players/>
+                    }
+                ]
             },
             {
-                path: "/players/sign-up",
-                element: <PlayerRegistration />,
+                path: routes.CHALLENGES_LIST,
+                element: <Challenges/>,
             },
             {
-                path: "/challenges",
-                element: <Challenges />,
+                path: routes.ABOUT,
+                element: <About/>,
             },
             {
-                path: "/about",
-                element: <About />,
-            },
-            {
-                path: "/admin",
-                element: <AdminLogin />,
-            },
+                path: routes.ADMIN,
+                children: [
+                    {
+                        path: "sign-up",
+                        element: <AdminLogin/>,
+                    }
+                ]
+            }
         ],
     },
 ]);

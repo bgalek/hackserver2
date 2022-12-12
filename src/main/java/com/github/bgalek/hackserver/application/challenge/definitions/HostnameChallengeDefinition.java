@@ -1,4 +1,4 @@
-package com.github.bgalek.hackserver.application.challenge;
+package com.github.bgalek.hackserver.application.challenge.definitions;
 
 import com.github.bgalek.hackserver.application.challenge.api.ChallengeDefinition;
 import com.github.bgalek.hackserver.application.challenge.api.TaskDefinition;

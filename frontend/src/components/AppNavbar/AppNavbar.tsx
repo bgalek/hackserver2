@@ -1,34 +1,33 @@
-import React, { useState } from "react";
+import React from "react";
 import { Code, Group, Navbar, Title } from "@mantine/core";
-import {
-    IconDatabaseImport,
-    IconDeviceGamepad2,
-    IconLogout,
-    IconReceipt2,
-    IconUser,
-} from "@tabler/icons";
+import { IconDatabaseImport, IconDeviceGamepad2, IconLogout, IconReceipt2, IconUser, } from "@tabler/icons";
 import { useLocalUserSettings } from "@bgalek/react-contexts";
 import { useAppBarStyles } from "./AppNavbar.styles";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { AppSettings } from "../../types/AppSettings";
 
 export function AppNavbar() {
     const { classes, cx } = useAppBarStyles();
-    const [active, setActive] = useState("My profile");
     const { settings, clearSettings } = useLocalUserSettings<AppSettings>();
     const navigate = useNavigate();
 
     const menuItems = [];
 
-    if (settings.player.id) {
+    if (settings.admin?.secret) {
         menuItems.push({
-            link: `/player`,
+            link: `/admin`,
+            label: "Admin",
+            icon: IconUser,
+        })
+    } else if (settings.player.id) {
+        menuItems.push({
+            link: `/me`,
             label: "My profile",
             icon: IconUser,
         });
     } else {
         menuItems.push({
-            link: "/players/sign-up",
+            link: "/sign-up",
             label: "Register",
             icon: IconUser,
         });
@@ -37,25 +36,18 @@ export function AppNavbar() {
     menuItems.push(
         { link: "/players", label: "Players", icon: IconUser },
         { link: "/challenges", label: "Challanges", icon: IconDatabaseImport },
+        { link: "/leaderboard", label: "Leaderboard", icon: IconDatabaseImport },
         { link: "/about", label: "About", icon: IconReceipt2 }
     );
 
     const links = menuItems.map((item) => (
-        <a
-            className={cx(classes.link, {
-                [classes.linkActive]: item.label === active,
-            })}
-            href={item.link}
-            key={item.label}
-            onClick={(event) => {
-                event.preventDefault();
-                setActive(item.label);
-                navigate(item.link);
-            }}
-        >
-            <item.icon className={classes.linkIcon} stroke={1.5} />
+        <NavLink to={item.link} key={item.label}
+                 className={({ isActive }) => cx(classes.link, {
+                     [classes.linkActive]: isActive,
+                 })}>
+            <item.icon className={classes.linkIcon} stroke={1.5}/>
             <span>{item.label}</span>
-        </a>
+        </NavLink>
     ));
 
     return (
@@ -63,7 +55,7 @@ export function AppNavbar() {
             <Navbar.Section grow>
                 <Group className={classes.header} position="apart">
                     <Group>
-                        <IconDeviceGamepad2 />
+                        <IconDeviceGamepad2/>
                         <Title className={classes.logo}>HACKSERVER</Title>
                     </Group>
                     <Code className={classes.version}>
@@ -74,7 +66,7 @@ export function AppNavbar() {
             </Navbar.Section>
 
             <Navbar.Section className={classes.footer}>
-                {settings.player && (
+                {(settings.player.id || settings.admin?.secret) && (
                     <LogoutButton
                         classes={{
                             link: classes.link,
@@ -91,16 +83,13 @@ export function AppNavbar() {
     );
 }
 
-function LogoutButton({
-    classes,
-    onClick,
-}: {
+function LogoutButton({ classes, onClick }: {
     classes: { link: string; linkIcon: string };
     onClick: () => void;
 }) {
     return (
         <a href="#" className={classes.link} onClick={onClick}>
-            <IconLogout className={classes.linkIcon} stroke={1.5} />
+            <IconLogout className={classes.linkIcon} stroke={1.5}/>
             <span>Logout</span>
         </a>
     );
