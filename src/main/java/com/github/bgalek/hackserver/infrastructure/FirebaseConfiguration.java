@@ -10,8 +10,9 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.io.FileInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 import static com.github.bgalek.hackserver.infrastructure.FirebaseConfiguration.FirebaseConfigurationProperties;
 
@@ -20,8 +21,8 @@ import static com.github.bgalek.hackserver.infrastructure.FirebaseConfiguration.
 class FirebaseConfiguration {
     @Bean
     @ConditionalOnProperty(prefix = "app.firebase", value = "enabled", havingValue = "true")
-    Firestore firestore(FirebaseConfigurationProperties firebaseConfigurationProperties) throws IOException {
-        FileInputStream serviceAccount = new FileInputStream(firebaseConfigurationProperties.keyLocation());
+    Firestore firestore() throws IOException {
+        ByteArrayInputStream serviceAccount = new ByteArrayInputStream(System.getenv("FIREBASE_SECRET").getBytes(StandardCharsets.UTF_8));
         return FirestoreOptions.newBuilder()
                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))
                 .build()
@@ -49,7 +50,6 @@ class FirebaseConfiguration {
 
     @ConfigurationProperties(prefix = "app.firebase")
     record FirebaseConfigurationProperties(
-            String keyLocation,
             boolean enabled
     ) {}
 }
