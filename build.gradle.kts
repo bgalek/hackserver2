@@ -27,7 +27,7 @@ dependencies {
     implementation(fileTree(baseDir = "libs"))
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("com.google.firebase:firebase-admin:9.1.1")
-    implementation("io.micrometer:micrometer-registry-jmx:1.10.4")
+    implementation("io.micrometer:micrometer-registry-prometheus:latest.release")
     implementation("com.github.slugify:slugify:3.0.2")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }

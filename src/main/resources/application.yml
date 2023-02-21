@@ -2,12 +2,21 @@ app:
   firebase:
     enabled: false
 
-logging:
-  file:
-    name: app.log
-
+server:
+  forward-headers-strategy: FRAMEWORK
+  error:
+    whitelabel:
+      enabled: false
 
 spring:
   mvc:
     pathmatch:
       matching-strategy: ANT_PATH_MATCHER
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
+          - prometheus
