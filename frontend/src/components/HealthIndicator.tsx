@@ -1,7 +1,7 @@
 import React from "react";
 import { Badge, Box } from "@mantine/core";
-import { IconBug, IconCheck } from "@tabler/icons";
 import { HealthStatus } from "../types/RegisteredPlayer";
+import { IconBug, IconCheck } from "@tabler/icons-react";
 
 export function HealthIndicator({ status }: { status: HealthStatus }) {
     switch (status) {

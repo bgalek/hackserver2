@@ -18,9 +18,9 @@ export function AdminLogin() {
         },
     });
     return (
-        <Container size="lg" my={40}>
-            <Title align="center">Administration!</Title>
-            <Text color="dimmed" size="sm" align="center" mt={5}>
+        <Container size="lg" mb={40}>
+            <Title>Administration!</Title>
+            <Text color="dimmed" size="sm"mt={5}>
                 All your base are belong to us
             </Text>
             <Paper

@@ -8,10 +8,13 @@ import Challenges from "./views/Challenges";
 import Players from "./views/Players";
 import { CurrentPlayerDetails } from "./views/Player/CurrentPlayerDetails";
 import { AdminLogin } from "./views/Admin/AdminLogin";
+import Error from "./views/Error/Error";
 import { CommandPalette } from "./components/CommandPalette";
+import NotFound from "./views/Error/NotFound";
 
 const styles = (theme: MantineTheme) => ({
     main: {
+        height: '100%',
         backgroundColor:
             theme.colorScheme === "dark"
                 ? theme.colors.dark[4]
@@ -48,16 +51,23 @@ export const router = createBrowserRouter([
                 element: <p>index</p>,
             },
             {
+                path: '*',
+                element: <NotFound/>,
+            },
+            {
                 path: routes.CURRENT_PLAYER,
+                errorElement: <Error />,
                 element: <CurrentPlayerDetails/>,
             },
 
             {
                 path: routes.PLAYER_SIGN_UP,
+                errorElement: <Error />,
                 element: <PlayerRegistration/>,
             },
             {
                 path: routes.PLAYERS_LIST,
+                errorElement: <Error />,
                 children: [
                     {
                         path: "",
@@ -68,14 +78,17 @@ export const router = createBrowserRouter([
             },
             {
                 path: routes.CHALLENGES_LIST,
+                errorElement: <Error />,
                 element: <Challenges/>,
             },
             {
                 path: routes.ABOUT,
+                errorElement: <Error />,
                 element: <About/>,
             },
             {
                 path: routes.ADMIN,
+                errorElement: <Error />,
                 children: [
                     {
                         path: "sign-up",

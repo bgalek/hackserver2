@@ -1,10 +1,19 @@
 import React from "react";
 import { Code, Group, Navbar, Title } from "@mantine/core";
-import { IconDatabaseImport, IconDeviceGamepad2, IconLogout, IconReceipt2, IconUser, } from "@tabler/icons";
+import {
+    IconAward,
+    IconGolf,
+    IconDeviceGamepad2,
+    IconLogout,
+    IconReceipt2,
+    IconUser,
+    IconUsers
+} from "@tabler/icons-react";
 import { useLocalUserSettings } from "@bgalek/react-contexts";
 import { useAppBarStyles } from "./AppNavbar.styles";
 import { NavLink, useNavigate } from "react-router-dom";
 import { AppSettings } from "../../types/AppSettings";
+import {routes} from "../../router";
 
 export function AppNavbar() {
     const { classes, cx } = useAppBarStyles();
@@ -15,29 +24,29 @@ export function AppNavbar() {
 
     if (settings.admin?.secret) {
         menuItems.push({
-            link: `/admin`,
+            link: routes.ADMIN,
             label: "Admin",
             icon: IconUser,
         })
     } else if (settings.player.id) {
         menuItems.push({
-            link: `/me`,
+            link: routes.CURRENT_PLAYER,
             label: "My profile",
             icon: IconUser,
         });
     } else {
         menuItems.push({
-            link: "/sign-up",
+            link: routes.PLAYER_SIGN_UP,
             label: "Register",
             icon: IconUser,
         });
     }
 
     menuItems.push(
-        { link: "/players", label: "Players", icon: IconUser },
-        { link: "/challenges", label: "Challanges", icon: IconDatabaseImport },
-        { link: "/leaderboard", label: "Leaderboard", icon: IconDatabaseImport },
-        { link: "/about", label: "About", icon: IconReceipt2 }
+        { link: routes.PLAYERS_LIST, label: "Players", icon: IconUsers },
+        { link: routes.CHALLENGES_LIST, label: "Challanges", icon: IconGolf },
+        { link: "/leaderboard", label: "Leaderboard", icon: IconAward },
+        { link: routes.ABOUT, label: "About", icon: IconReceipt2 }
     );
 
     const links = menuItems.map((item) => (
@@ -55,7 +64,7 @@ export function AppNavbar() {
             <Navbar.Section grow>
                 <Group className={classes.header} position="apart">
                     <Group>
-                        <IconDeviceGamepad2/>
+                        <IconDeviceGamepad2 style={{color: "white"}}/>
                         <Title className={classes.logo}>HACKSERVER</Title>
                     </Group>
                     <Code className={classes.version}>

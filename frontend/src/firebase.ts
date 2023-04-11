@@ -60,6 +60,7 @@ export const publishedChallengeConverter: FirestoreDataConverter<PublishedChalle
             return {
                 id: snapshot.id,
                 name: data.name,
+                description: data.description,
                 thumbnail: data.thumbnail
             };
         },

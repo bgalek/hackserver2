@@ -15,6 +15,14 @@ public interface ChallengeRepository extends FirebaseRepository<ChallengeDefinit
         return Map.of(
                 "id", challengeDefinition.getId(),
                 "name", challengeDefinition.getName(),
+                "maxPoints", challengeDefinition.getMaxPoints(),
+                "description", challengeDefinition.getDescription(),
+                "endpoint", challengeDefinition.getChallengeEndpoint(),
+                "parameters", challengeDefinition.getChallengeParameters().stream().map(param -> Map.of(
+                        "name", param.name(),
+                        "desc", param.desc()
+                )).toList(),
+                "example", challengeDefinition.getExample(),
                 "thumbnail", "https://picsum.photos/720/540"
         );
     }

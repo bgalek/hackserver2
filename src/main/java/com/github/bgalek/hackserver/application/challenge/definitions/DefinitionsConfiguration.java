@@ -10,8 +10,6 @@ import java.util.List;
 class DefinitionsConfiguration {
 
     public DefinitionsConfiguration(List<ChallengeDefinition> challengeDefinitionList, ChallengeRepository challengeRepository) {
-        challengeDefinitionList.forEach(challengeDefinition -> {
-            challengeRepository.register(challengeDefinition);
-        });
+        challengeDefinitionList.forEach(challengeRepository::register);
     }
 }

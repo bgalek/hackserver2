@@ -82,7 +82,7 @@ class HostnameChallengeDefinition implements ChallengeDefinition {
     }
 
     @Override
-    public List<QueryParam> getChallengeParams() {
+    public List<QueryParam> getChallengeParameters() {
         return List.of(
                 new QueryParam("url", "url to get hostname from")
         );

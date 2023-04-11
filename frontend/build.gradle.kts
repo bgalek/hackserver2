@@ -7,7 +7,7 @@ plugins {
 
 node {
     download.set(true)
-    version.set("19.2.0")
+    version.set("19.8.1")
 }
 
 tasks.npmInstall {

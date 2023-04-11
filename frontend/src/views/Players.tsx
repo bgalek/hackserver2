@@ -2,7 +2,7 @@ import React from "react";
 import { Alert, Button, Container, Paper, Table, Text, Title, } from "@mantine/core";
 import { collection, orderBy, query } from "firebase/firestore";
 import { firestore, registeredPlayerConverter } from "../firebase";
-import { IconAlertCircle } from "@tabler/icons";
+import { IconAlertCircle } from "@tabler/icons-react";
 import { openModal } from "@mantine/modals";
 import { RegisteredPlayer } from "../types/RegisteredPlayer";
 import { PlayerDetails } from "../components/PlayerDetails";
@@ -12,6 +12,7 @@ import { useLocalUserSettings } from "@bgalek/react-contexts";
 import { AppSettings } from "../types/AppSettings";
 import { useMutation } from "react-query";
 import { showNotification } from "@mantine/notifications";
+import NoData from "../components/NoData/NoData";
 
 export default function Players() {
     const { settings } = useLocalUserSettings<AppSettings>();
@@ -97,12 +98,13 @@ export default function Players() {
         });
 
     return (
-        <Container size="lg" my={40}>
+        <Container size="lg" style={{height: '100%'}}>
             <Title>Registered players</Title>
             <Text color="dimmed" size="sm" mt={5}>
                 {rows.length} players
             </Text>
-            <Paper withBorder shadow="sm" p={30} mt={30} radius="md">
+            {rows.length === 0 && <NoData/>}
+            {rows.length > 0 && <Paper withBorder shadow="sm" p={30} mt={30} radius="md">
                 <Table>
                     <thead>
                     <tr>
@@ -114,7 +116,7 @@ export default function Players() {
                     </thead>
                     <tbody>{rows}</tbody>
                 </Table>
-            </Paper>
+            </Paper>}
         </Container>
     );
 }

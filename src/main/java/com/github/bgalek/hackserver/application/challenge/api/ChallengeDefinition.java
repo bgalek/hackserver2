@@ -14,7 +14,7 @@ public interface ChallengeDefinition {
 
     String getChallengeEndpoint();
 
-    List<QueryParam> getChallengeParams();
+    List<QueryParam> getChallengeParameters();
 
     Class<?> solutionType();
 

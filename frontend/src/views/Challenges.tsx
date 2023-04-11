@@ -1,11 +1,13 @@
-import { collection, query } from "firebase/firestore";
-import { firestore, publishedChallengeConverter } from "../firebase";
-import { Alert, Badge, Button, Card, Group, Text, Image, Container } from "@mantine/core";
-import { IconAlertCircle } from "@tabler/icons";
+import {collection, query} from "firebase/firestore";
+import {firestore, publishedChallengeConverter} from "../firebase";
+import {Alert, Badge, Button, Card, Container, Group, Image, SimpleGrid, Stack, Text, Title} from "@mantine/core";
+import {IconAlertCircle} from "@tabler/icons-react";
 import React from "react";
 import Loading from "./Loading";
-import { useFirestoreQuery } from "@react-query-firebase/firestore";
-import { PublishedChallenge } from "../types/PublishedChallenge";
+import {useFirestoreQuery} from "@react-query-firebase/firestore";
+import {PublishedChallenge} from "../types/PublishedChallenge";
+import NoData from "../components/NoData/NoData";
+import {modals} from '@mantine/modals';
 
 export default function Challenges() {
     const ref = query(collection(firestore, "challenges")).withConverter(publishedChallengeConverter);
@@ -32,33 +34,43 @@ export default function Challenges() {
     }
 
     return (
-        <Container>
-            {challenges.docs.map((it) => it.data()).map(challenge => (
-                <Card shadow="sm" p="lg" radius="md" withBorder>
-                    <Card.Section>
-                        <Image
-                            src={challenge.thumbnail}
-                            height={160}
-                            alt="Norway"
-                        />
-                    </Card.Section>
-
-                    <Group position="apart" mt="md" mb="xs">
-                        <Text weight={500}>Norway Fjord Adventures</Text>
-                        <Badge color="pink" variant="light">
-                            On Sale
-                        </Badge>
-                    </Group>
-
-                    <Text size="sm" color="dimmed">
-                        {challenge.name}
-                    </Text>
-
-                    <Button variant="light" color="blue" fullWidth mt="md" radius="md">
-                        Book classic tour now
-                    </Button>
-                </Card>
-            ))}
+        <Container size="lg" mb={40}>
+            <Title>Challenges</Title>
+            <Text color="dimmed" size="sm" mt={5}>
+                Browse today's challenges
+            </Text>
+            {challenges.size === 0 && <NoData/>}
+            <SimpleGrid cols={3} pt="lg">
+                {challenges.docs.map((it) => it.data()).map(challenge => (
+                    <Card shadow="sm" p="lg" radius="md" withBorder>
+                        <Card.Section>
+                            <Image
+                                src={challenge.thumbnail}
+                                height={160}
+                                alt="Norway"
+                            />
+                        </Card.Section>
+                        <Group position="apart" mt="md" mb="xs">
+                            <Text weight={500}>{challenge.name}</Text>
+                            <Badge color="pink" variant="light">100 points</Badge>
+                        </Group>
+                        <Button variant="light" color="blue" fullWidth mt="md" radius="md"
+                                onClick={() => {
+                                    modals.open({
+                                        title: `${challenge.name} details`,
+                                        children: (
+                                            <Stack>
+                                                <Text>{challenge.description}</Text>
+                                            </Stack>
+                                        ),
+                                    });
+                                }}
+                        >
+                            Details
+                        </Button>
+                    </Card>
+                ))}
+            </SimpleGrid>
         </Container>
     );
 }

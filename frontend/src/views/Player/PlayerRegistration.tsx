@@ -25,7 +25,7 @@ export function PlayerRegistration() {
     const playerRegistration = usePlayerRegistration();
     const form = useForm<FormValues>({ initialValues, });
     return (
-        <Container size="lg" my={40}>
+        <Container size="lg" mb={40}>
             <Title>Welcome!</Title>
             <Text color="dimmed" size="sm" mt={5}>
                 Please <Text component="span">register</Text> your workstation

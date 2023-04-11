@@ -5,7 +5,7 @@ import { useLocalUserSettings } from "@bgalek/react-contexts";
 import { AppSettings } from "../../types/AppSettings";
 import Loading from "../Loading";
 import { PlayerDetails } from "../../components/PlayerDetails";
-import { IconAlertCircle } from "@tabler/icons";
+import { IconAlertCircle } from "@tabler/icons-react";
 import { Alert } from "@mantine/core";
 import { useFirestoreQuery } from "@react-query-firebase/firestore";
 import { RegisteredPlayer } from "../../types/RegisteredPlayer";
@@ -43,7 +43,7 @@ export function CurrentPlayerDetails() {
         return <Loading/>;
     }
 
-    if (!player) {
+    if (!player || player.docs.length === 0) {
         return <p>error: wyloguj się</p>;
     }
 
