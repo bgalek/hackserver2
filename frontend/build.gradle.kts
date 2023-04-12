@@ -30,7 +30,7 @@ tasks.build {
     }
 }
 
-tasks.register("run") {
+tasks.register("bootRun") {
     dependsOn(project.tasks.getByName("buildFrontend"))
     copy {
         from("${project.projectDir}/dist").into("${rootProject.projectDir}/src/main/resources/public")

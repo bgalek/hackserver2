@@ -17,7 +17,7 @@ export function CommandPalette() {
                         action: (e, { close }) => {
                             navigate(routes.CHALLENGES_LIST);
                             if (close) {
-                                close();
+                                close(true);
                             }
                         },
                     }),
@@ -27,7 +27,7 @@ export function CommandPalette() {
                         action: (e, { close }) => {
                             navigate(routes.ADMIN_SIGN_UP);
                             if (close) {
-                                close();
+                                close(true);
                             }
                         },
                     }),
