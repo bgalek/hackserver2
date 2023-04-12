@@ -3,7 +3,7 @@ package com.github.bgalek.hackserver.application.player.api;
 import java.net.InetSocketAddress;
 import java.net.URI;
 
-public non-sealed class RegisteredPlayer extends AnonymousPlayer {
+public final class RegisteredPlayer extends AnonymousPlayer {
     private final PlayerId id;
     private final String secret;
     private HealthStatus healthStatus = HealthStatus.UNKNOWN;

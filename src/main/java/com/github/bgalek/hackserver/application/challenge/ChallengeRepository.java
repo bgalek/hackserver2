@@ -17,7 +17,7 @@ public interface ChallengeRepository extends FirebaseRepository<ChallengeDefinit
     @Override
     default Map<String, Object> serialize(ChallengeDefinition challengeDefinition) {
         return Map.of(
-                "id", challengeDefinition.getId(),
+                "id", challengeDefinition.getId().value(),
                 "name", challengeDefinition.getName(),
                 "maxPoints", challengeDefinition.getMaxPoints(),
                 "description", challengeDefinition.getDescription(),

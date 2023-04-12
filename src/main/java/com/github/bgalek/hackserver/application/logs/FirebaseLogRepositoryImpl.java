@@ -1,5 +1,6 @@
 package com.github.bgalek.hackserver.application.logs;
 
+import com.github.bgalek.hackserver.application.challenge.api.ChallengeId;
 import com.github.bgalek.hackserver.application.logs.api.LogEntry;
 import com.github.bgalek.hackserver.application.player.api.PlayerId;
 import com.google.cloud.firestore.CollectionReference;
@@ -33,7 +34,7 @@ public class FirebaseLogRepositoryImpl implements LogRepository {
     }
 
     @Override
-    public void remove(PlayerId playerId, String challengeId) {
+    public void remove(PlayerId playerId, ChallengeId challengeId) {
         logCollection
                 .whereEqualTo("playerId", playerId)
                 .whereEqualTo("challengeId", challengeId)
@@ -44,8 +45,8 @@ public class FirebaseLogRepositoryImpl implements LogRepository {
     }
 
     @Override
-    public void insert(PlayerId playerId, String challengeId) {
-        LogEntry logEntry = new LogEntry(playerId, challengeId);
+    public void insert(PlayerId playerId, ChallengeId challengeId, int score) {
+        LogEntry logEntry = new LogEntry(playerId, challengeId, score);
         try {
             logCollection.document().create(serialize(logEntry)).get();
         } catch (InterruptedException | ExecutionException e) {

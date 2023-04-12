@@ -22,8 +22,8 @@ public interface ChallengeDefinition {
 
     List<TaskDefinition> getTasks();
 
-    default String getId() {
-        return slugify.slugify(getName());
+    default ChallengeId getId() {
+        return ChallengeId.valueOf(slugify.slugify(getName()));
     }
 
     default int getMaxPoints() {
@@ -33,5 +33,6 @@ public interface ChallengeDefinition {
                 .sum();
     }
 
-    record QueryParam(String name, String desc) {}
+    record QueryParam(String name, String desc) {
+    }
 }
