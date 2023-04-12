@@ -12,6 +12,7 @@ public interface LogRepository extends FirebaseRepository<LogEntry> {
     List<LogEntry> findAll();
 
     void insert(PlayerId playerId, String challengeId);
+    void remove(PlayerId playerId, String challengeId);
 
     @Override
     default Map<String, Object> serialize(LogEntry logEntry) {

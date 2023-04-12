@@ -33,6 +33,17 @@ public class FirebaseLogRepositoryImpl implements LogRepository {
     }
 
     @Override
+    public void remove(PlayerId playerId, String challengeId) {
+        logCollection
+                .whereEqualTo("playerId", playerId)
+                .whereEqualTo("challengeId", challengeId)
+                .get()
+                .resultNow()
+                .getDocuments()
+                .forEach(document -> document.getReference().delete());
+    }
+
+    @Override
     public void insert(PlayerId playerId, String challengeId) {
         LogEntry logEntry = new LogEntry(playerId, challengeId);
         try {
