@@ -1,37 +1,24 @@
-package com.github.bgalek.hackserver.application.challenge.api;
+package com.github.bgalek.hackserver.application.challenge.api
 
-import com.github.slugify.Slugify;
+import com.github.slugify.Slugify
 
-import java.util.List;
+object Slugifier {
+    private val slug = Slugify.builder().build()
 
-public interface ChallengeDefinition {
+    fun slugify(text: String): String = slug.slugify(text)
+}
 
-    Slugify slugify = Slugify.builder().build();
+interface ChallengeDefinition<SOLUTION> {
+    val name: String
+    val description: String
+    val challengeEndpoint: String
+    val challengeParameters: List<QueryParam>
+    val example: TaskDefinition<SOLUTION>
+    val tasks: List<TaskDefinition<SOLUTION>>
 
-    String getName();
+    fun getId(): String = Slugifier.slugify(name)
+    fun getMaxPoints() = tasks.sumOf { it.score.points }
 
-    String getDescription();
-
-    String getChallengeEndpoint();
-
-    List<QueryParam> getChallengeParameters();
-
-    Class<?> solutionType();
-
-    TaskDefinition getExample();
-
-    List<TaskDefinition> getTasks();
-
-    default String getId() {
-        return slugify.slugify(getName());
-    }
-
-    default int getMaxPoints() {
-        return this.getTasks()
-                .stream()
-                .mapToInt(task -> task.getTaskScoring().getMaxPoints())
-                .sum();
-    }
-
-    record QueryParam(String name, String desc) {}
+    @JvmRecord
+    data class QueryParam(val name: String, val desc: String)
 }

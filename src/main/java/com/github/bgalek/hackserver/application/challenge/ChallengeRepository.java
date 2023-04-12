@@ -8,7 +8,7 @@ import org.apache.commons.lang3.NotImplementedException;
 import java.util.*;
 
 public interface ChallengeRepository extends FirebaseRepository<ChallengeDefinition> {
-    Collection<ChallengeDefinition> findAll();
+    Collection<ChallengeDefinition<?>> findAll();
 
     void register(ChallengeDefinition challengeDefinition);
 
