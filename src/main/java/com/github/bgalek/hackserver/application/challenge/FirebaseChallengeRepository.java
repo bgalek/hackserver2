@@ -28,7 +28,7 @@ class FirebaseChallengeRepository implements ChallengeRepository {
     @Override
     public void register(ChallengeDefinition challengeDefinition) {
         try {
-            challengeCollection.document(challengeDefinition.getId().value()).update(serialize(challengeDefinition)).get();
+            challengeCollection.document(challengeDefinition.getId().value()).set(serialize(challengeDefinition)).get();
             runtimeCollection.put(challengeCollection.getId(), challengeDefinition);
         } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);

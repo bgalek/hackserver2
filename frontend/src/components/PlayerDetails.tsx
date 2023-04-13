@@ -1,4 +1,18 @@
-import {Avatar, Badge, Button, Center, Container, Paper, Table, Text, Title,} from "@mantine/core";
+import {
+    ActionIcon,
+    Avatar,
+    Badge,
+    Button,
+    Center,
+    Container,
+    CopyButton,
+    Group,
+    Paper,
+    Table,
+    Text,
+    Title,
+    Tooltip,
+} from "@mantine/core";
 import React from "react";
 import {HealthIndicator} from "./HealthIndicator";
 import {RegisteredPlayer} from "../types/RegisteredPlayer";
@@ -7,6 +21,7 @@ import {LogEntry} from "../types/LogEntry";
 import {PublishedChallenge} from "../types/PublishedChallenge";
 import {UseQueryResult} from "react-query";
 import {FirestoreError} from "firebase/firestore";
+import {IconCheck, IconCopy} from "@tabler/icons-react";
 
 export function PlayerDetails({player, logs, challenges}: {
     player: RegisteredPlayer,
@@ -16,6 +31,7 @@ export function PlayerDetails({player, logs, challenges}: {
     return (
         <Container size="lg" my={40}>
             <Avatar
+                sx={(theme) => ({background: theme.primaryColor})}
                 src={`https://avatars.dicebear.com/api/male/${player.id}.svg`}
                 size={120}
                 radius={120}
@@ -27,9 +43,20 @@ export function PlayerDetails({player, logs, challenges}: {
             <Text align="center" color="dimmed" size="sm">
                 http://{player.host}:{player.port}
             </Text>
-            <Text align="center" color="dimmed">
-                secret:<Badge color="red">{player.secret}</Badge>
-            </Text>
+            <Group position="center" spacing={0}>
+                <Text align="center" color="dimmed">
+                    id:<Badge color="red">{player.id}</Badge>
+                </Text>
+                <CopyButton value={player.id} timeout={2000}>
+                    {({copied, copy}) => (
+                        <Tooltip label={copied ? 'Copied' : 'Copy'} withArrow position="right">
+                            <ActionIcon color={copied ? 'teal' : 'gray'} onClick={copy}>
+                                {copied ? <IconCheck size="1rem"/> : <IconCopy size="1rem"/>}
+                            </ActionIcon>
+                        </Tooltip>
+                    )}
+                </CopyButton>
+            </Group>
             <Center>
                 <HealthIndicator status={player.status}/>
             </Center>
@@ -41,9 +68,12 @@ export function PlayerDetails({player, logs, challenges}: {
     );
 }
 
-function PlayerChallengesTable({challenges}: { challenges: any }) {
+function PlayerChallengesTable({challenges}: { challenges: UseQueryResult<PublishedChallenge[], FirestoreError> }) {
     if (challenges.isLoading) {
         return <Loading/>;
+    }
+    if (challenges.error) {
+        return <p>error fetching logs</p>;
     }
     return (
         <Paper withBorder shadow="sm" p={30} mt={30} radius="md">
