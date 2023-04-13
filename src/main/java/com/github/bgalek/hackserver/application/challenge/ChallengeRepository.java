@@ -3,9 +3,9 @@ package com.github.bgalek.hackserver.application.challenge;
 import com.github.bgalek.hackserver.application.challenge.api.ChallengeDefinition;
 import com.github.bgalek.hackserver.infrastructure.FirebaseRepository;
 import com.google.cloud.firestore.DocumentSnapshot;
-import org.apache.commons.lang3.NotImplementedException;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Map;
 
 public interface ChallengeRepository extends FirebaseRepository<ChallengeDefinition> {
     Collection<ChallengeDefinition> findAll();
@@ -31,8 +31,9 @@ public interface ChallengeRepository extends FirebaseRepository<ChallengeDefinit
                 "thumbnail", "https://picsum.photos/720/540"
         );
     }
+
     @Override
     default ChallengeDefinition deserialize(DocumentSnapshot doc) {
-        throw new NotImplementedException("Not implemented yet");
+        throw new IllegalStateException("Not implemented yet");
     }
 }

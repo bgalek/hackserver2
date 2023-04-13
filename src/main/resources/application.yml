@@ -1,6 +1,7 @@
 app:
   firebase:
-    enabled: false
+    type: emulator
+    projectId: "hackserver-9c717"
 
 server:
   forward-headers-strategy: FRAMEWORK

@@ -24,7 +24,6 @@ dependencies {
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     errorprone("com.google.errorprone:error_prone_core:2.18.0")
-    implementation(fileTree(baseDir = "libs"))
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("com.google.firebase:firebase-admin:9.1.1")
     implementation("io.micrometer:micrometer-registry-prometheus:latest.release")
@@ -46,4 +45,13 @@ tasks.withType<Tar> {
 
 tasks.bootJar {
     dependsOn(project("frontend").tasks.build)
+}
+
+tasks.bootRun {
+    dependsOn(project("frontend").tasks.build)
+}
+
+tasks.register("run") {
+    group = "application"
+    dependsOn("bootRun")
 }

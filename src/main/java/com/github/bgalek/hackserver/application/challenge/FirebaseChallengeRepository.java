@@ -3,7 +3,6 @@ package com.github.bgalek.hackserver.application.challenge;
 import com.github.bgalek.hackserver.application.challenge.api.ChallengeDefinition;
 import com.google.cloud.firestore.CollectionReference;
 import com.google.cloud.firestore.Firestore;
-import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -28,9 +27,8 @@ class FirebaseChallengeRepository implements ChallengeRepository {
 
     @Override
     public void register(ChallengeDefinition challengeDefinition) {
-        String id = challengeCollection.document().getId();
         try {
-            challengeCollection.document(id).create(serialize(challengeDefinition)).get();
+            challengeCollection.document(challengeDefinition.getId().value()).update(serialize(challengeDefinition)).get();
             runtimeCollection.put(challengeCollection.getId(), challengeDefinition);
         } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
@@ -39,6 +37,6 @@ class FirebaseChallengeRepository implements ChallengeRepository {
 
     @Override
     public void activate(ChallengeDefinition challengeDefinition) {
-        throw new NotImplementedException("Not implemented yet");
+        throw new IllegalStateException("Not implemented yet");
     }
 }
