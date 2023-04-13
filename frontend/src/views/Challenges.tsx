@@ -1,34 +1,23 @@
-import {collection, query} from "firebase/firestore";
-import {firestore, publishedChallengeConverter} from "../firebase";
 import {Alert, Badge, Button, Card, Container, Group, Image, SimpleGrid, Stack, Text, Title} from "@mantine/core";
 import {IconAlertCircle} from "@tabler/icons-react";
 import React from "react";
 import Loading from "./Loading";
-import {useFirestoreQuery} from "@react-query-firebase/firestore";
-import {PublishedChallenge} from "../types/PublishedChallenge";
 import NoData from "../components/NoData/NoData";
 import {modals} from '@mantine/modals';
+import {useChallenges} from "../hooks/queries";
 
 export default function Challenges() {
-    const ref = query(collection(firestore, "challenges")).withConverter(publishedChallengeConverter);
-    const {
-        data: challenges,
-        isLoading,
-        isError,
-        error,
-    } = useFirestoreQuery<PublishedChallenge>(["challenges"], ref, {
-        subscribe: true,
-    });
+    const challenges = useChallenges();
 
-    if (isLoading) return <Loading/>;
-    if (isError || !challenges) {
+    if (challenges.isLoading) return <Loading/>;
+    if (challenges.isError || !challenges.data) {
         return (
             <Alert
                 icon={<IconAlertCircle size={16}/>}
                 title="Bummer!"
                 color="red"
             >
-                {error ? error.message : "internal error"}
+                {challenges.error ? challenges.error.message : "internal error"}
             </Alert>
         );
     }
@@ -39,9 +28,9 @@ export default function Challenges() {
             <Text color="dimmed" size="sm" mt={5}>
                 Browse today's challenges
             </Text>
-            {challenges.size === 0 && <NoData/>}
+            {challenges.data.length === 0 && <NoData/>}
             <SimpleGrid cols={3} pt="lg">
-                {challenges.docs.map((it) => it.data()).map(challenge => (
+                {challenges.data.map(challenge => (
                     <Card shadow="sm" p="lg" radius="md" withBorder>
                         <Card.Section>
                             <Image

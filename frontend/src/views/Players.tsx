@@ -1,33 +1,19 @@
 import React from "react";
-import { Alert, Button, Container, Paper, Table, Text, Title, } from "@mantine/core";
-import { collection, orderBy, query } from "firebase/firestore";
-import { firestore, registeredPlayerConverter } from "../firebase";
-import { IconAlertCircle } from "@tabler/icons-react";
-import { openModal } from "@mantine/modals";
-import { RegisteredPlayer } from "../types/RegisteredPlayer";
-import { PlayerDetails } from "../components/PlayerDetails";
+import {Alert, Button, Container, Paper, Table, Text, Title,} from "@mantine/core";
+import {IconAlertCircle} from "@tabler/icons-react";
+import {openModal} from "@mantine/modals";
+import {PlayerDetails} from "../components/PlayerDetails";
 import Loading from "./Loading";
-import { useFirestoreQuery } from "@react-query-firebase/firestore";
-import { useLocalUserSettings } from "@bgalek/react-contexts";
-import { AppSettings } from "../types/AppSettings";
-import { useMutation } from "react-query";
-import { showNotification } from "@mantine/notifications";
+import {useLocalUserSettings} from "@bgalek/react-contexts";
+import {AppSettings} from "../types/AppSettings";
+import {useMutation} from "react-query";
+import {showNotification} from "@mantine/notifications";
 import NoData from "../components/NoData/NoData";
+import {usePlayers} from "../hooks/queries";
 
 export default function Players() {
-    const { settings } = useLocalUserSettings<AppSettings>();
-    const ref = query(
-        collection(firestore, "players"),
-        orderBy("name")
-    ).withConverter(registeredPlayerConverter);
-    const {
-        data: players,
-        isLoading,
-        isError,
-        error,
-    } = useFirestoreQuery<RegisteredPlayer>(["players"], ref, {
-        subscribe: true,
-    });
+    const {settings} = useLocalUserSettings<AppSettings>();
+    const players = usePlayers();
 
     const kickPlayer = useMutation({
         mutationFn: (variables: { playerId: string }) =>
@@ -53,21 +39,20 @@ export default function Players() {
     });
 
 
-    if (isLoading) return <Loading/>;
-    if (isError || !players) {
+    if (players.isLoading) return <Loading/>;
+    if (players.isError || !players.data) {
         return (
             <Alert
                 icon={<IconAlertCircle size={16}/>}
                 title="Bummer!"
                 color="red"
             >
-                {error ? error.message : "internal error"}
+                {players.error ? players.error.message : "internal error"}
             </Alert>
         );
     }
 
-    const rows = players.docs
-        .map((it) => it.data())
+    const rows = players.data
         .map((player) => {
             return (
                 <tr key={player.id}>

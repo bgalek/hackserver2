@@ -1,19 +1,18 @@
-import {
-    Avatar,
-    Badge,
-    Button,
-    Center,
-    Container,
-    Paper,
-    Table,
-    Text,
-    Title,
-} from "@mantine/core";
+import {Avatar, Badge, Button, Center, Container, Paper, Table, Text, Title,} from "@mantine/core";
 import React from "react";
-import { RegisteredPlayer } from "../types/RegisteredPlayer";
-import { HealthIndicator } from "./HealthIndicator";
+import {HealthIndicator} from "./HealthIndicator";
+import {RegisteredPlayer} from "../types/RegisteredPlayer";
+import Loading from "../views/Loading";
+import {LogEntry} from "../types/LogEntry";
+import {PublishedChallenge} from "../types/PublishedChallenge";
+import {UseQueryResult} from "react-query";
+import {FirestoreError} from "firebase/firestore";
 
-export function PlayerDetails({ player }: { player: RegisteredPlayer }) {
+export function PlayerDetails({player, logs, challenges}: {
+    player: RegisteredPlayer,
+    logs?: UseQueryResult<LogEntry[], FirestoreError>,
+    challenges?: UseQueryResult<PublishedChallenge[], FirestoreError>
+}) {
     return (
         <Container size="lg" my={40}>
             <Avatar
@@ -32,109 +31,73 @@ export function PlayerDetails({ player }: { player: RegisteredPlayer }) {
                 secret:<Badge color="red">{player.secret}</Badge>
             </Text>
             <Center>
-                <HealthIndicator status={player.status} />
+                <HealthIndicator status={player.status}/>
             </Center>
             <Title mt={30}>Your progress</Title>
-            <Paper withBorder shadow="sm" p={30} mt={30} radius="md">
-                <Table>
-                    <thead>
-                        <tr>
-                            <th>Challenge</th>
-                            <th>Score</th>
-                            <th>Result</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Calculator</td>
-                            <td>bbb</td>
-                            <td>ccc</td>
-                            <td><Button>RUN</Button></td>
-                        </tr>
-                        <tr>
-                            <td>Calculator</td>
-                            <td>bbb</td>
-                            <td>ccc</td>
-                            <td><Button>RUN</Button></td>
-                        </tr>
-                        <tr>
-                            <td>Calculator</td>
-                            <td>bbb</td>
-                            <td>ccc</td>
-                            <td><Button>RUN</Button></td>
-                        </tr>
-                        <tr>
-                            <td>Calculator</td>
-                            <td>bbb</td>
-                            <td>ccc</td>
-                            <td><Button>RUN</Button></td>
-                        </tr>
-                        <tr>
-                            <td>Calculator</td>
-                            <td>bbb</td>
-                            <td>ccc</td>
-                            <td><Button>RUN</Button></td>
-                        </tr>
-                        <tr>
-                            <td>Calculator</td>
-                            <td>bbb</td>
-                            <td>ccc</td>
-                            <td><Button>RUN</Button></td>
-                        </tr>
-                        <tr>
-                            <td>Calculator</td>
-                            <td>bbb</td>
-                            <td>ccc</td>
-                            <td><Button>RUN</Button></td>
-                        </tr>
-                    </tbody>
-                </Table>
-            </Paper>
+            {challenges && <PlayerChallengesTable challenges={challenges}/>}
             <Title mt={30}>Requests log</Title>
-            <Paper withBorder shadow="sm" p={30} mt={30} radius="md">
-                <Table>
-                    <thead>
-                        <tr>
-                            <th>Challenge</th>
-                            <th>Task</th>
-                            <th>Response</th>
-                            <th>Valid</th>
-                            <th>Score</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><a href="#">Calculator</a></td>
-                            <td>2+2</td>
-                            <td>4</td>
-                            <td>NO</td>
-                            <td>0</td>
-                        </tr>
-                        <tr>
-                            <td><a href="#">Calculator</a></td>
-                            <td>2+2</td>
-                            <td>4</td>
-                            <td>NO</td>
-                            <td>0</td>
-                        </tr>
-                        <tr>
-                            <td><a href="#">Calculator</a></td>
-                            <td>2+2</td>
-                            <td>4</td>
-                            <td>NO</td>
-                            <td>0</td>
-                        </tr>
-                        <tr>
-                            <td><a href="#">Calculator</a></td>
-                            <td>2+2</td>
-                            <td>4</td>
-                            <td>NO</td>
-                            <td>0</td>
-                        </tr>
-                    </tbody>
-                </Table>
-            </Paper>
+            {logs && <PlayerLogsTable logs={logs}/>}
         </Container>
+    );
+}
+
+function PlayerChallengesTable({challenges}: { challenges: any }) {
+    if (challenges.isLoading) {
+        return <Loading/>;
+    }
+    return (
+        <Paper withBorder shadow="sm" p={30} mt={30} radius="md">
+            <Table>
+                <thead>
+                <tr>
+                    <th>Challenge</th>
+                    <th>Score</th>
+                    <th>Result</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Calculator</td>
+                    <td>bbb</td>
+                    <td>ccc</td>
+                    <td><Button>EXECUTE</Button></td>
+                </tr>
+                </tbody>
+            </Table>
+        </Paper>
+    );
+}
+
+function PlayerLogsTable({logs}: { logs: UseQueryResult<LogEntry[], FirestoreError> }) {
+    if (logs.isLoading) {
+        return <Loading/>;
+    }
+    if (logs.error) {
+        return <p>error fetching logs</p>;
+    }
+    return (
+        <Paper withBorder shadow="sm" p={30} mt={30} radius="md">
+            <Table>
+                <thead>
+                <tr>
+                    <th>Challenge</th>
+                    <th>Task</th>
+                    <th>Response</th>
+                    <th>Valid</th>
+                    <th>Score</th>
+                </tr>
+                </thead>
+                <tbody>
+                {(logs.data || []).map((log) => (<tr>
+                        <td>Calculator</td>
+                        <td>bbb</td>
+                        <td>ccc</td>
+                        <td>{JSON.stringify(log)}</td>
+                    </tr>)
+                )}
+                </tbody>
+            </Table>
+        </Paper>
     );
 }
